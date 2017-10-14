@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 5px;
+  border-left: 3px solid ${props => props.isActive ? '#108EE9' : 'transparent'};
 
   &:not(:last-child) {
     border-bottom: 1px solid #108EE9;
@@ -55,9 +56,11 @@ class Note extends PureComponent {
   }
 
   render() {
-    const { title, description } = this.props.note;
+    const { isActive, note, handleSelect } = this.props;
+    const { title, description } = note;
+
     return (
-      <Wrapper>
+      <Wrapper isActive={isActive} onClick={handleSelect}>
         <NoteWrapper>
           <div>title: {title}</div>
           <div>description: {description}</div>

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { graphql, gql, compose } from 'react-apollo';
+import Note from '../../../components/Note';
 import CreateNoteButton from './CreateNoteButton';
-import Note from '../Note';
 
 const ALL_NOTES_QUERY = gql`
   query AllNotesQuery {
@@ -58,8 +58,13 @@ class NoteList extends PureComponent {
     store.writeQuery({ query: ALL_NOTES_QUERY, data });
   }
 
+  handleSelect = noteID => () => {
+    this.props.selectNote(noteID);
+  }
+
   render() {
-    const { loading, error, allNotes } = this.props.allNotesQuery;
+    const { currentNoteID, allNotesQuery } = this.props;
+    const { loading, error, allNotes } = allNotesQuery;
 
     if (loading) {
       return <div>Loading</div>
@@ -72,7 +77,13 @@ class NoteList extends PureComponent {
         <CreateNoteButton handleCreate={this.handleCreate} />
         <NoteListContainer>
           {allNotes.map(note => (
-            <Note key={note.id} note={note} handleDelete={this.handleDelete} />
+            <Note
+              key={note.id}
+              note={note}
+              isActive={note.id === currentNoteID}
+              handleSelect={this.handleSelect(note.id)}
+              handleDelete={this.handleDelete}
+            />
           ))}
         </NoteListContainer>
       </div>

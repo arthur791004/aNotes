@@ -1,0 +1,1 @@
+export const SELECT_NOTE = 'app/containers/NoteEditor/SELECT_NOTE';

@@ -1,9 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import Immutable, { fromJS } from 'immutable';
 import createReducer from './reducers';
+import apolloClient from './apolloClient';
 
 export default function configureStore(initialState) {
-  const middlewares = [];
+  const middlewares = [
+    apolloClient.middleware(),
+  ];
 
   const enhancers = [
     applyMiddleware(...middlewares),
@@ -40,9 +43,7 @@ export default function configureStore(initialState) {
     module.hot.accept('./reducers', () => {
       import('./reducers')
         .then(({ default: createReducers }) => {
-          const nextReducers = createReducers(store.asyncReducers);
-
-          store.replaceReducer(nextReducers);
+          store.replaceReducer(createReducers(store.asyncReducers));
         });
     });
   }
