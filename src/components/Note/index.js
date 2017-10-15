@@ -1,16 +1,5 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
-import { graphql, gql } from 'react-apollo';
-
-const DELETE_NOTE_MUTATION = gql`
-  mutation DeleteNoteMutation($id: ID!) {
-    deleteNote(
-      id: $id,
-    ) {
-      id
-    }
-  }
-`
 
 const NoteWrapper = styled.div`
   flex: 1;
@@ -42,17 +31,7 @@ const DeleteButton = styled.div`
 
 class Note extends PureComponent {
   deleteNote = () => {
-    const { note, deleteNoteMutation } = this.props;
-    const { id } = note;
 
-    deleteNoteMutation({
-      variables: {
-        id,
-      },
-      update: (store, { data: { deleteNote } }) => {
-        this.props.handleDelete(store, deleteNote, id);
-      }
-    });
   }
 
   render() {
@@ -73,4 +52,4 @@ class Note extends PureComponent {
   }
 }
 
-export default graphql(DELETE_NOTE_MUTATION, { name: 'deleteNoteMutation' })(Note);
+export default Note;

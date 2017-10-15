@@ -3,10 +3,12 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import NoteEditor from './components/NoteEditor';
 import asyncLoaders from './asyncLoaders';
-import { makeSelectCurrentNoteID } from './selectors';
+import {
+  makeSelectCurrentNote,
+} from './selectors';
 
 const mapStateToProps = createStructuredSelector({
-  currentNoteID: makeSelectCurrentNoteID(),
+  currentNote: makeSelectCurrentNote(),
 });
 
 const mapDispatchToProps = dispatch => ({

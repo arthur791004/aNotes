@@ -6,6 +6,7 @@ const networkInterface = createNetworkInterface({
 
 const client = new ApolloClient({
   networkInterface,
+  dataIdFromObject: obj => obj.id,
   reduxRootSelector: state => state.get('apollo'),
 });
 

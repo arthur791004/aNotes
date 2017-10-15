@@ -1,11 +1,21 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import { createEpicMiddleware } from 'redux-observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/operator/mergeMap';
 import Immutable, { fromJS } from 'immutable';
 import createReducer from './reducers';
-import apolloClient from './apolloClient';
+import initialEpics from './epics';
 
 export default function configureStore(initialState) {
+  const epic$ = new BehaviorSubject(initialEpics);
+  const rootEpic = (action$, store) =>
+    epic$.mergeMap(epic =>
+      epic(action$, store)
+    );
+  const epicMiddleware = createEpicMiddleware(rootEpic);
+
   const middlewares = [
-    apolloClient.middleware(),
+    epicMiddleware,
   ];
 
   const enhancers = [
@@ -36,6 +46,9 @@ export default function configureStore(initialState) {
 
   // Async reducer registry
   store.asyncReducers = {};
+  // Async epic registry
+  store.epic$ = epic$;
+  store.asyncEpics = [];
 
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
